@@ -6,7 +6,7 @@ class Website_Mail_API {
 	protected $session_id;
 	protected $session_key;
 
-	public function __construct( $session_id, $session_key ) {
+	public function __construct( $session_id = null, $session_key = null ) {
 		$this->session_id = $session_id;
 		$this->session_key = $session_key;
 	}
@@ -14,26 +14,26 @@ class Website_Mail_API {
 	public function register_website() {
 		$path = '/websites/register';
 
-		return self::post( $path );
+		return $this->post( $path );
 	}
 
 
 	public function add_domain( $domain ) {
 		$path = '/websites/domains';
 
-		return self::post( $path, array( 'domain' => array( 'domain' => $domain ) ) );
+		return $this->post( $path, array( 'domain' => array( 'domain' => $domain ) ) );
 	}
 
 	public function get_domain( $domain_id ) {
 		$path = '/websites/domains' . $domain_id;
 
-		return self::get( $path );
+		return $this->get( $path );
 	}
 
 	public function request_domain_verification( $domain_id ) {
 		$path = '/websites/domains/' . $domain_id . 'verify';
 
-		return self::post( $path );
+		return $this->post( $path );
 	}
 
 	public function send_email( $domain_id, $recipient, $subject, $message ) {
@@ -48,25 +48,29 @@ class Website_Mail_API {
 			)
 		);
 
-		return self::post( $path, $body );
+		return $this->post( $path, $body );
 	}
 
+	protected function get( $path, $params = array(), $headers = array(), $args = array(), $unauthenticated = false ) {
+		if ( ! $unauthenticated ) {
+			$headers['Authorization'] = get_api_session_header();
+		}
 
-	public function unauth_get( $path, $params = array(), $headers = array(), $args = array() ) {
-		
 		$args['headers'] = $headers;
 
 		$response = wp_remote_get( get_url($path, $params), $args );
 
-		return wp_remote_retrieve_body( $response );
+		return array(
+			wp_remote_retrieve_body( $response ),
+			wp_remote_retrieve_response_code( $response )
+		);
 	}
 
-	public function get( $path, $params = array(), $headers = array(), $args = array() ) {
-		$headers['Authorization'] = get_api_session_header();
-	}
+	protected function post( $path, $body = array(), $headers = array(), $args = array(), $unauthenticated = false ) {
+		if ( ! $unauthenticated ) {
+			$headers['Authorization'] = get_api_session_header();
+		}
 
-	public function post( $path, $body = array(), $headers = array(), $args = array() ) {
-		$headers['Authorization'] = get_api_session_header();
 		$json = wp_json_encode( $body );
 		$args['body'] = $json;
 		$headers['Content-Type'] = 'application/json';
@@ -75,7 +79,10 @@ class Website_Mail_API {
 
 		$response = wp_remote_post( get_url($path), $args );
 
-		return wp_remote_retrieve_body( $response );
+		return array(
+			wp_remote_retrieve_body( $response ),
+			wp_remote_retrieve_response_code( $response )
+		);
 	}
 
 
@@ -85,6 +92,10 @@ class Website_Mail_API {
 	}
 
 	private function get_api_session_header() {
+		if ( ! isset( $this->session_id ) || ! isset( $this->session_key ) ) {
+			throw new Exception("Session ID and Session Key have to be set for authenticated request.", 1);
+		}
+
 		return 'Bearer ' . $this->session_id . ':' . $this->session_key;
 	}
 }
