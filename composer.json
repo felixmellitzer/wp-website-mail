@@ -1,0 +1,13 @@
+{
+    "name": "tfm-agency/wp-website-mail",
+    "type": "wordpress-plugin",
+    "require": {
+        "monolog/monolog": "^2.1"
+    },
+    "authors": [
+        {
+            "name": "Tobias Feistmantl",
+            "email": "tobias@feistmantl.io"
+        }
+    ]
+}

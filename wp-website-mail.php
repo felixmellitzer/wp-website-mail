@@ -30,6 +30,15 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+require __DIR__ . '/vendor/autoload.php';
+
+
+/**
+ * Setup logging functionality.
+ */
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-website-mail-tools.php';
+WPWM_Tools::setup_global_logger();
+
 /**
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
