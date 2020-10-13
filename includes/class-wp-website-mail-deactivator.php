@@ -30,7 +30,7 @@ class Wp_Website_Mail_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-
+		WPWM_Tools::log( 'Plugin has been DEactivated.' );
 	}
 
 }
