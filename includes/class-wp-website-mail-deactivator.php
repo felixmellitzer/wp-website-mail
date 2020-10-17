@@ -31,6 +31,7 @@ class Wp_Website_Mail_Deactivator {
 	 */
 	public static function deactivate() {
 		WPWM_Tools::log( 'Plugin has been DEactivated.' );
+		WPWM_Options::delete_all_options();
 	}
 
 }

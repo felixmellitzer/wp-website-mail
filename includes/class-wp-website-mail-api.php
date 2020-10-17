@@ -36,15 +36,18 @@ class Website_Mail_API {
 		return $this->post( $path );
 	}
 
-	public function send_email( $domain_id, $recipient, $subject, $message ) {
+	public function send_email( $domain_id, $to, $cc = '', $bcc = '', $subject, $message_text, $message_html = '' ) {
 		$path = '/emails';
 
 		$body = array(
 			'email' => array(
 				'website_domain_id' => $domain_id,
-				'recipient' => $recipient,
+				'to' => $to,
+				'cc' => $cc,
+				'bcc' => $bcc,
 				'subject' => $subject,
-				'message' => $message,
+				'message_text' => $message_text,
+				'message_html' => $message_html,
 			)
 		);
 

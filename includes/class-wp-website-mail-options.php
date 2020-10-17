@@ -1,53 +1,42 @@
 <?php
 
 class WPWM_Options {
+	private static $_options = array(
+		'session_id',
+		'session_key',
+		'domain_id',
+		'verification_token',
+		'verified',
+		'denied',
+	);
 
-	public static function get_session_id() {
-		return self::get( 'SESSION_ID' );
+	public static function __callStatic( $name, $args ) {
+		$name_exploded = explode( '_', $name, 2 );
+		$prefix = $name_exploded[0];
+		$key = $name_exploded[1];
+
+		if ( false !== array_search( $key, self::$_options ) ) {
+			if ( $prefix == 'get' ) {
+				return self::get( $key );
+			}
+			if ( $prefix == 'set' ) {
+				return self::set( $key, $args[0] );
+			}
+		}
+
+		trigger_error('Call to undefined method '.__CLASS__.'::'.$name.'()', E_USER_ERROR);
 	}
 
-	public static function set_session_id( $val ) {
-		return self::set( 'SESSION_ID', $val );
+
+
+	public static function has_verification_status() {
+		return self::get_verified() || self::get_denied();
 	}
 
-	public static function get_session_key() {
-		return self::get( 'SESSION_KEY' );
-	}
-
-	public static function set_session_key( $val ) {
-		return self::set( 'SESSION_KEY', $val );
-	}
-
-	public static function get_website_id() {
-		return self::get( 'WEBSITE_ID' );
-	}
-
-	public static function set_website_id( $val ) {
-		return self::set( 'WEBSITE_ID', $val );
-	}
-
-	public static function get_verification_token() {
-		return self::get( 'VERIFICATION_TOKEN' );
-	}
-
-	public static function set_verification_token( $val ) {
-		return self::set( 'VERIFICATION_TOKEN', $val );
-	}
-
-	public static function get_verified() {
-		return self::get( 'VERIFIED' );
-	}
-
-	public static function set_verified( $val ) {
-		return self::set( 'VERIFIED', $val );
-	}
-
-	public static function get_denied() {
-		return self::get( 'DENIED' );
-	}
-
-	public static function set_denied( $val ) {
-		return self::set( 'DENIED', $val );
+	public static function delete_all_options() {
+		foreach ( self::$_options as $key ) {
+			self::delete( $key );
+		}
 	}
 
 

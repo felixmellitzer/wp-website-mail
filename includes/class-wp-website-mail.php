@@ -78,6 +78,7 @@ class Wp_Website_Mail {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+		$this->define_hooks();
 
 	}
 
@@ -102,6 +103,8 @@ class Wp_Website_Mail {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-website-mail-options.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-website-mail-api.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-website-mail-registration-manager.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-website-mail-mail-manager.php';
+
 
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
@@ -177,8 +180,21 @@ class Wp_Website_Mail {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
-		add_action( 'init', 'WP_Website_Mail_Registration_Manager::get_verification_token_for_verification' );
+	}
 
+
+	private function define_hooks() {
+		$mail_manager = new WPWM_Mail_Manager();
+
+		add_action( 'init', 'WP_Website_Mail_Registration_Manager::get_verification_token_for_verification' );
+		
+		$this->loader->add_action( 'plugin_loaded', $mail_manager, 'replace_wp_mail' );
+
+		// Request verification
+		if ( ! WPWM_Options::has_verification_status() && WPWM_Options::get_domain_id() ) {
+			$registration_manager = new WP_Website_Mail_Registration_Manager();
+			$this->loader->add_action( 'init', $registration_manager, 'request_api_for_verification' );
+		}
 	}
 
 	/**

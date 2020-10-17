@@ -46,7 +46,7 @@ class WP_Website_Mail_Registration_Manager {
 		if ( $response_status >= 200 && $response_status <= 299 ) {
 			WPWM_Tools::log( 'Adding domain to website successful', ['RegistrationManager'] );
 
-			WPWM_Options::set_website_id( $response_body->id );
+			WPWM_Options::set_domain_id( $response_body->id );
 			WPWM_Options::set_verification_token( $response_body->verification_token );
 
 			return true;
@@ -57,12 +57,12 @@ class WP_Website_Mail_Registration_Manager {
 		}
 	}
 
-	public function request_api_for_verfication() {
+	public function request_api_for_verification() {
 		WPWM_Tools::log( 'Request API for verification', ['RegistrationManager'] );
 
 		$this->set_session_details_from_db();
 
-		$api_response = $this->api->request_domain_verification( WPWM_Options::get_website_id() );
+		$api_response = $this->api->request_domain_verification( WPWM_Options::get_domain_id() );
 		$response_status = $api_response[1];
 		$response_body = $api_response[0];
 
@@ -97,11 +97,6 @@ class WP_Website_Mail_Registration_Manager {
 			WPWM_Tools::log( 'Adding domain to website UNsuccessful', ['RegistrationManager', 'run'] );
 			return;
 		}
-
-		if ( ! $this->request_api_for_verfication() ) {
-			WPWM_Tools::log( 'Domain request verification UNsuccessful', ['RegistrationManager', 'run'] );
-			return;
-		}
 	}
 
 
@@ -118,6 +113,7 @@ class WP_Website_Mail_Registration_Manager {
 
 	public static function get_verification_token_for_verification() {
 		if ( isset( $_GET['get_wm_verification_token'] ) ) {
+			WPWM_Tools::log( 'Verification token was requested', ['RegistrationManager'] );
 			echo WPWM_Options::get_verification_token();
 			exit;
 		}
