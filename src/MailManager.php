@@ -2,7 +2,7 @@
 namespace WPWM;
 
 class MailManager {
-	public function replace_wp_mail() {
+	public function replaceWPMailer() {
 		if ( ! Options::get_verified() ) {
 			return;
 		}
@@ -165,7 +165,7 @@ class MailManager {
 			}
 
 			$api = new API( Options::get_session_id(), Options::get_session_key() );
-			$api->send_email( Options::get_domain_id(), implode( ',', $to ), implode( ',', $cc ), implode( ',', $bcc ), $subject, $message );
+			$api->sendEmail( Options::get_domain_id(), implode( ',', $to ), implode( ',', $cc ), implode( ',', $bcc ), $subject, $message );
 		}
 	}
 }

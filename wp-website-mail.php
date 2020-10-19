@@ -36,7 +36,7 @@ require __DIR__ . '/vendor/autoload.php';
 /**
  * Setup logging functionality.
  */
-WPWM\Tools::setup_global_logger();
+WPWM\Tools::setupGlobalLogger();
 
 /**
  * Currently plugin version.

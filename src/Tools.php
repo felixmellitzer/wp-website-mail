@@ -8,7 +8,7 @@ class Tools {
 
 	protected static $logger;
 
-	public static function setup_global_logger() {
+	public static function setupGlobalLogger() {
 		self::$logger = new Logger('wp-website-mail');
 		self::$logger->pushHandler(new ErrorLogHandler);
 	}
@@ -21,7 +21,7 @@ class Tools {
 		self::$logger->info( $message, $context );
 	}
 
-	public static function get_site_domain() {
+	public static function getSiteDomain() {
 		return parse_url( home_url() )['host'];
 	}
 }

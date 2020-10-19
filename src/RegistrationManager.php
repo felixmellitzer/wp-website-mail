@@ -8,10 +8,10 @@ class RegistrationManager {
 		$this->api = new API();
 	}
 
-	public function register_new_website() {
+	public function registerNewWebsite() {
 		Tools::log( 'Register new website with API', ['RegistrationManager'] );
 
-		$registration_response = $this->api->register_website();
+		$registration_response = $this->api->registerWebsite();
 		$response_status = $registration_response[1];
 		$response_body = $registration_response[0];
 
@@ -24,8 +24,8 @@ class RegistrationManager {
 			Options::set_session_id( $api_session->id );
 			Options::set_session_key( $api_session->api_key );
 
-			$this->api->set_session_id( $api_session->id );
-			$this->api->set_session_key( $api_session->api_key );
+			$this->api->setSessionID( $api_session->id );
+			$this->api->setSessionKey( $api_session->api_key );
 
 			return true;
 		} else {
@@ -35,12 +35,12 @@ class RegistrationManager {
 		}
 	}
 
-	public function add_domain_to_website() {
+	public function addDomainToWebsite() {
 		Tools::log( 'Add new domain to website with API', ['RegistrationManager'] );
 
-		$this->set_session_details_from_db();
+		$this->setSessionDetailsFromDB();
 
-		$api_response = $this->api->add_domain( Tools::get_site_domain() );
+		$api_response = $this->api->addDomain( Tools::getSiteDomain() );
 		$response_status = $api_response[1];
 		$response_body = $api_response[0];
 
@@ -58,12 +58,12 @@ class RegistrationManager {
 		}
 	}
 
-	public function request_api_for_verification() {
+	public function requestAPIForVerification() {
 		Tools::log( 'Request API for verification', ['RegistrationManager'] );
 
-		$this->set_session_details_from_db();
+		$this->setSessionDetailsFromDB();
 
-		$api_response = $this->api->request_domain_verification( Options::get_domain_id() );
+		$api_response = $this->api->requestDomainVerification( Options::get_domain_id() );
 		$response_status = $api_response[1];
 		$response_body = $api_response[0];
 
@@ -89,25 +89,25 @@ class RegistrationManager {
 	}
 
 	public function run() {
-		if ( ! $this->register_new_website() ) {
+		if ( ! $this->registerNewWebsite() ) {
 			Tools::log( 'Website registration UNsuccessful', ['RegistrationManager', 'run'] );
 			return;
 		}
 
-		if ( ! $this->add_domain_to_website() ) {
+		if ( ! $this->addDomainToWebsite() ) {
 			Tools::log( 'Adding domain to website UNsuccessful', ['RegistrationManager', 'run'] );
 			return;
 		}
 	}
 
 
-	private function set_session_details_from_db() {
-		$api_session_id = $this->api->get_session_id();
-		$api_session_key = $this->api->get_session_key();
+	private function setSessionDetailsFromDB() {
+		$api_session_id = $this->api->getSessionID();
+		$api_session_key = $this->api->getSessionKey();
 
 		if ( ! isset( $api_session_id ) || ! isset( $api_session_key ) ) {
-			$this->api->set_session_id( Options::get_session_id() );
-			$this->api->set_session_key( Options::get_session_key() );
+			$this->api->setSessionID( Options::get_session_id() );
+			$this->api->setSessionKey( Options::get_session_key() );
 		}
 	}
 

@@ -31,4 +31,4 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 require __DIR__ . '/vendor/autoload.php';
-WPWM\Options::delete_all_options();
+WPWM\Options::deleteAllOptions();

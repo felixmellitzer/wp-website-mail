@@ -30,11 +30,11 @@ class Options {
 
 
 
-	public static function has_verification_status() {
+	public static function hasVerificationStatus() {
 		return self::get_verified() || self::get_denied();
 	}
 
-	public static function delete_all_options() {
+	public static function deleteAllOptions() {
 		foreach ( self::$_options as $key ) {
 			self::delete( $key );
 		}

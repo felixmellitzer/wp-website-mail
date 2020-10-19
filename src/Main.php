@@ -77,11 +77,11 @@ class Main {
 		}
 		$this->plugin_name = 'wp-website-mail';
 
-		$this->load_dependencies();
-		$this->set_locale();
-		$this->define_admin_hooks();
-		$this->define_public_hooks();
-		$this->define_hooks();
+		$this->loadDependencies();
+		$this->setLocale();
+		$this->defineAdminHooks();
+		$this->definePublicHooks();
+		$this->defineHooks();
 
 	}
 
@@ -101,7 +101,7 @@ class Main {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function load_dependencies() {
+	private function loadDependencies() {
 
 		$this->loader = new Loader();
 
@@ -116,11 +116,11 @@ class Main {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function set_locale() {
+	private function setLocale() {
 
 		$plugin_i18n = new I18n();
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+		$this->loader->addAction( 'plugins_loaded', $plugin_i18n, 'loadPluginTextdomain' );
 
 	}
 
@@ -131,12 +131,12 @@ class Main {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function define_admin_hooks() {
+	private function defineAdminHooks() {
 
-		$plugin_admin = new Admin\Controller( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Admin\Controller( $this->getPluginName(), $this->getVersion() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->addAction( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+		$this->loader->addAction( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
 	}
 
@@ -147,27 +147,27 @@ class Main {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function define_public_hooks() {
+	private function definePublicHooks() {
 
-		$plugin_public = new Admin\Controller( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Admin\Controller( $this->getPluginName(), $this->getVersion() );
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->addAction( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+		$this->loader->addAction( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
 	}
 
 
-	private function define_hooks() {
+	private function defineHooks() {
 		$mail_manager = new MailManager();
 
 		add_action( 'init', '\WPWM\RegistrationManager::get_verification_token_for_verification' );
 		
-		$this->loader->add_action( 'plugin_loaded', $mail_manager, 'replace_wp_mail' );
+		$this->loader->addAction( 'plugin_loaded', $mail_manager, 'replaceWPMailer' );
 
 		// Request verification
-		if ( ! Options::has_verification_status() && Options::get_domain_id() ) {
+		if ( ! Options::hasVerificationStatus() && Options::get_domain_id() ) {
 			$registration_manager = new RegistrationManager();
-			$this->loader->add_action( 'init', $registration_manager, 'request_api_for_verification' );
+			$this->loader->addAction( 'init', $registration_manager, 'requestAPIForVerification' );
 		}
 	}
 
@@ -187,7 +187,7 @@ class Main {
 	 * @since     1.0.0
 	 * @return    string    The name of the plugin.
 	 */
-	public function get_plugin_name() {
+	public function getPluginName() {
 		return $this->plugin_name;
 	}
 
@@ -197,7 +197,7 @@ class Main {
 	 * @since     1.0.0
 	 * @return    Wp_Website_Mail_Loader    Orchestrates the hooks of the plugin.
 	 */
-	public function get_loader() {
+	public function getLoader() {
 		return $this->loader;
 	}
 
@@ -207,7 +207,7 @@ class Main {
 	 * @since     1.0.0
 	 * @return    string    The version number of the plugin.
 	 */
-	public function get_version() {
+	public function getVersion() {
 		return $this->version;
 	}
 

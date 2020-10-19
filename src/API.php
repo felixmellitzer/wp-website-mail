@@ -13,32 +13,32 @@ class API {
 		$this->session_key = $session_key;
 	}
 
-	public function register_website() {
+	public function registerWebsite() {
 		$path = '/websites/register';
 
 		return $this->post( $path );
 	}
 
 
-	public function add_domain( $domain ) {
+	public function addDomain( $domain ) {
 		$path = '/websites/domains';
 
 		return $this->post( $path, array( 'domain' => array( 'domain' => $domain ) ) );
 	}
 
-	public function get_domain( $domain_id ) {
+	public function getDomain( $domain_id ) {
 		$path = '/websites/domains' . $domain_id;
 
 		return $this->get( $path );
 	}
 
-	public function request_domain_verification( $domain_id ) {
+	public function requestDomainVerification( $domain_id ) {
 		$path = '/websites/domains/' . $domain_id . '/verify';
 
 		return $this->post( $path );
 	}
 
-	public function send_email( $domain_id, $to, $cc = '', $bcc = '', $subject, $message_text, $message_html = '' ) {
+	public function sendEmail( $domain_id, $to, $cc = '', $bcc = '', $subject, $message_text, $message_html = '' ) {
 		$path = '/emails';
 
 		$body = array(
@@ -59,10 +59,10 @@ class API {
 	protected function get( $path, $params = array(), $headers = array(), $args = array() ) {
 		$this->log( 'POST request initiated', array( $path ) );
 
-		$headers['Authorization'] = get_api_session_header();
+		$headers['Authorization'] = $this->getAPISessionHeader();
 		$args['headers'] = $headers;
 
-		$response = wp_remote_get( $this->get_url($path, $params), $args );
+		$response = wp_remote_get( $this->getURL($path, $params), $args );
 
 		$response_body = wp_remote_retrieve_body( $response );
 		$response_status_code = wp_remote_retrieve_response_code( $response );
@@ -82,14 +82,14 @@ class API {
 	protected function post( $path, $body = array(), $headers = array(), $args = array() ) {
 		$this->log( 'POST request initiated', array( $path ) );
 
-		$headers['Authorization'] = $this->get_api_session_header();
+		$headers['Authorization'] = $this->getAPISessionHeader();
 		$json = wp_json_encode( $body );
 		$args['body'] = $json;
 		$headers['Content-Type'] = 'application/json';
 
 		$args['headers'] = $headers;
 
-		$response = wp_remote_post( $this->get_url($path), $args );
+		$response = wp_remote_post( $this->getURL($path), $args );
 
 		$response_body = wp_remote_retrieve_body( $response );
 		$response_status_code = wp_remote_retrieve_response_code( $response );
@@ -106,29 +106,29 @@ class API {
 		);
 	}
 
-	public function get_session_id() {
+	public function getSessionID() {
 		return $this->session_id;
 	}
 
-	public function get_session_key() {
+	public function getSessionKey() {
 		return $this->session_key;
 	}
 
-	public function set_session_id( $val ) {
+	public function setSessionID( $val ) {
 		$this->session_id = $val;
 	}
 
-	public function set_session_key( $val ) {
+	public function setSessionKey( $val ) {
 		$this->session_key = $val;
 	}
 
 
-	private function get_url( $path, $params = array() ) {
+	private function getURL( $path, $params = array() ) {
 		$uri = add_query_arg( $params, self::API_URI . $path );
 		return $uri;
 	}
 
-	private function get_api_session_header() {
+	private function getAPISessionHeader() {
 		if ( ! isset( $this->session_id ) || ! isset( $this->session_key ) ) {
 			$this->log( 'Session ID or Session Key not set.' );
 		}
