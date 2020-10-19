@@ -1,6 +1,7 @@
 <?php
+namespace WPWM;
 
-class WPWM_Options {
+class Options {
 	private static $_options = array(
 		'session_id',
 		'session_key',

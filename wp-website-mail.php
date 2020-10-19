@@ -36,8 +36,7 @@ require __DIR__ . '/vendor/autoload.php';
 /**
  * Setup logging functionality.
  */
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-website-mail-tools.php';
-WPWM_Tools::setup_global_logger();
+WPWM\Tools::setup_global_logger();
 
 /**
  * Currently plugin version.
@@ -46,32 +45,9 @@ WPWM_Tools::setup_global_logger();
  */
 define( 'WP_WEBSITE_MAIL_VERSION', '1.0.0' );
 
-/**
- * The code that runs during plugin activation.
- * This action is documented in includes/class-wp-website-mail-activator.php
- */
-function activate_wp_website_mail() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-website-mail-activator.php';
-	Wp_Website_Mail_Activator::activate();
-}
 
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in includes/class-wp-website-mail-deactivator.php
- */
-function deactivate_wp_website_mail() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-website-mail-deactivator.php';
-	Wp_Website_Mail_Deactivator::deactivate();
-}
-
-register_activation_hook( __FILE__, 'activate_wp_website_mail' );
-register_deactivation_hook( __FILE__, 'deactivate_wp_website_mail' );
-
-/**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
- */
-require plugin_dir_path( __FILE__ ) . 'includes/class-wp-website-mail.php';
+register_activation_hook( __FILE__, 'WPWM\Activator::activate' );
+register_deactivation_hook( __FILE__, 'WPWM\Deactivator::deactivate' );
 
 /**
  * Begins execution of the plugin.
@@ -84,7 +60,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-wp-website-mail.php';
  */
 function run_wp_website_mail() {
 
-	$plugin = new Wp_Website_Mail();
+	$plugin = new WPWM\Main();
 	$plugin->run();
 
 }

@@ -1,13 +1,14 @@
 <?php
+namespace WPWM;
 
-class WPWM_Mail_Manager {
+class MailManager {
 	public function replace_wp_mail() {
-		if ( ! WPWM_Options::get_verified() ) {
+		if ( ! Options::get_verified() ) {
 			return;
 		}
 
 		function wp_mail( $to, $subject, $message, $headers = '', $attachments = array() ) {
-			WPWM_Tools::log('Our wp_mail was called!');
+			Tools::log('Our wp_mail was called!');
 
 			$atts = apply_filters( 'wp_mail', compact( 'to', 'subject', 'message', 'headers', 'attachments' ) );
 
@@ -163,8 +164,8 @@ class WPWM_Mail_Manager {
 				}
 			}
 
-			$api = new Website_Mail_API( WPWM_Options::get_session_id(), WPWM_Options::get_session_key() );
-			$api->send_email( WPWM_Options::get_domain_id(), implode( ',', $to ), implode( ',', $cc ), implode( ',', $bcc ), $subject, $message );
+			$api = new API( Options::get_session_id(), Options::get_session_key() );
+			$api->send_email( Options::get_domain_id(), implode( ',', $to ), implode( ',', $cc ), implode( ',', $bcc ), $subject, $message );
 		}
 	}
 }

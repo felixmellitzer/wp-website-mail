@@ -1,6 +1,8 @@
 <?php
 
-class Website_Mail_API {
+namespace WPWM;
+
+class API {
 	const API_URI = 'https://cloud.website-mail.com/api/v1';
 
 	protected $session_id;
@@ -136,6 +138,6 @@ class Website_Mail_API {
 
 	protected function log( $message, $context = array() ) {
 		array_unshift( $context, 'API Context' );
-		WPWM_Tools::log( $message, $context );
+		Tools::log( $message, $context );
 	}
 }

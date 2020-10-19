@@ -20,7 +20,10 @@
  * @subpackage Wp_Website_Mail/includes
  * @author     TFM Agency GmbH <hello@tfm.agency>
  */
-class Wp_Website_Mail_Deactivator {
+
+namespace WPWM;
+
+class Deactivator {
 
 	/**
 	 * Short Description. (use period)
@@ -30,8 +33,7 @@ class Wp_Website_Mail_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-		WPWM_Tools::log( 'Plugin has been DEactivated.' );
-		WPWM_Options::delete_all_options();
+		Tools::log( 'Plugin has been DEactivated.' );
 	}
 
 }

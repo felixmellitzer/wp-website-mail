@@ -24,7 +24,10 @@
  * @subpackage Wp_Website_Mail/includes
  * @author     TFM Agency GmbH <hello@tfm.agency>
  */
-class Wp_Website_Mail_i18n {
+
+namespace WPWM;
+
+class I18n {
 
 
 	/**

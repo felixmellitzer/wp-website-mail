@@ -4,6 +4,11 @@
     "require": {
         "monolog/monolog": "^2.1"
     },
+    "autoload": {
+        "psr-4": {
+            "WPWM\\": "src"
+        }
+    },
     "authors": [
         {
             "name": "Tobias Feistmantl",

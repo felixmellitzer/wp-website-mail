@@ -1,12 +1,16 @@
 <?php
+namespace WPWM;
 
-class WPWM_Tools {
+use \Monolog\Logger;
+use \Monolog\Handler\ErrorLogHandler;
+
+class Tools {
 
 	protected static $logger;
 
 	public static function setup_global_logger() {
-		self::$logger = new Monolog\Logger('wp-website-mail');
-		self::$logger->pushHandler(new Monolog\Handler\ErrorLogHandler);
+		self::$logger = new Logger('wp-website-mail');
+		self::$logger->pushHandler(new ErrorLogHandler);
 	}
 
 	public static function logger() {

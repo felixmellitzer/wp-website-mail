@@ -20,7 +20,10 @@
  * @subpackage Wp_Website_Mail/public
  * @author     TFM Agency GmbH <hello@tfm.agency>
  */
-class Wp_Website_Mail_Public {
+
+namespace WPWM\Public;
+
+class Controller {
 
 	/**
 	 * The ID of this plugin.

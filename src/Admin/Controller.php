@@ -20,7 +20,10 @@
  * @subpackage Wp_Website_Mail/admin
  * @author     TFM Agency GmbH <hello@tfm.agency>
  */
-class Wp_Website_Mail_Admin {
+
+namespace WPWM\Admin;
+
+class Controller {
 
 	/**
 	 * The ID of this plugin.

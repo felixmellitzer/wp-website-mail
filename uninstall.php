@@ -30,5 +30,5 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-website-mail-options.php';
-WPWM_Options::delete_all_options();
+require __DIR__ . '/vendor/autoload.php';
+WPWM\Options::delete_all_options();

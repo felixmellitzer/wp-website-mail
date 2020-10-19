@@ -27,7 +27,10 @@
  * @subpackage Wp_Website_Mail/includes
  * @author     TFM Agency GmbH <hello@tfm.agency>
  */
-class Wp_Website_Mail {
+
+namespace WPWM;
+
+class Main {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -100,36 +103,7 @@ class Wp_Website_Mail {
 	 */
 	private function load_dependencies() {
 
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-website-mail-options.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-website-mail-api.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-website-mail-registration-manager.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-website-mail-mail-manager.php';
-
-
-		/**
-		 * The class responsible for orchestrating the actions and filters of the
-		 * core plugin.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-website-mail-loader.php';
-
-		/**
-		 * The class responsible for defining internationalization functionality
-		 * of the plugin.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-website-mail-i18n.php';
-
-		/**
-		 * The class responsible for defining all actions that occur in the admin area.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-website-mail-admin.php';
-
-		/**
-		 * The class responsible for defining all actions that occur in the public-facing
-		 * side of the site.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-website-mail-public.php';
-
-		$this->loader = new Wp_Website_Mail_Loader();
+		$this->loader = new Loader();
 
 	}
 
@@ -144,7 +118,7 @@ class Wp_Website_Mail {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new Wp_Website_Mail_i18n();
+		$plugin_i18n = new I18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
@@ -159,7 +133,7 @@ class Wp_Website_Mail {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Wp_Website_Mail_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Admin\Controller( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -175,7 +149,7 @@ class Wp_Website_Mail {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Wp_Website_Mail_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Admin\Controller( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
@@ -184,15 +158,15 @@ class Wp_Website_Mail {
 
 
 	private function define_hooks() {
-		$mail_manager = new WPWM_Mail_Manager();
+		$mail_manager = new MailManager();
 
-		add_action( 'init', 'WP_Website_Mail_Registration_Manager::get_verification_token_for_verification' );
+		add_action( 'init', '\WPWM\RegistrationManager::get_verification_token_for_verification' );
 		
 		$this->loader->add_action( 'plugin_loaded', $mail_manager, 'replace_wp_mail' );
 
 		// Request verification
-		if ( ! WPWM_Options::has_verification_status() && WPWM_Options::get_domain_id() ) {
-			$registration_manager = new WP_Website_Mail_Registration_Manager();
+		if ( ! Options::has_verification_status() && Options::get_domain_id() ) {
+			$registration_manager = new RegistrationManager();
 			$this->loader->add_action( 'init', $registration_manager, 'request_api_for_verification' );
 		}
 	}

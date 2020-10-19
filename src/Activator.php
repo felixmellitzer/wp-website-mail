@@ -20,7 +20,10 @@
  * @subpackage Wp_Website_Mail/includes
  * @author     TFM Agency GmbH <hello@tfm.agency>
  */
-class Wp_Website_Mail_Activator {
+
+namespace WPWM;
+
+class Activator {
 
 	/**
 	 * Short Description. (use period)
@@ -30,12 +33,10 @@ class Wp_Website_Mail_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-website-mail-registration-manager.php';
-
-		$registration_manager = new WP_Website_Mail_Registration_Manager();
+		$registration_manager = new RegistrationManager();
 		$registration_manager->run();
 
-		WPWM_Tools::log( 'Plugin has been activated.' );
+		Tools::log( 'Plugin has been activated.' );
 	}
 
 }
