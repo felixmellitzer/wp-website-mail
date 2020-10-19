@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The plugin bootstrap file
  *
@@ -26,7 +25,7 @@
  */
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if (! defined( 'WPINC')) {
 	die;
 }
 
@@ -43,11 +42,11 @@ WPWM\Tools::setupGlobalLogger();
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'WP_WEBSITE_MAIL_VERSION', '1.0.0' );
+define('WP_WEBSITE_MAIL_VERSION', '1.0.0');
 
 
-register_activation_hook( __FILE__, 'WPWM\Activator::activate' );
-register_deactivation_hook( __FILE__, 'WPWM\Deactivator::deactivate' );
+register_activation_hook(__FILE__, 'WPWM\Activator::activate');
+register_deactivation_hook(__FILE__, 'WPWM\Deactivator::deactivate');
 
 /**
  * Begins execution of the plugin.
@@ -58,10 +57,10 @@ register_deactivation_hook( __FILE__, 'WPWM\Deactivator::deactivate' );
  *
  * @since    1.0.0
  */
-function run_wp_website_mail() {
-
+function run_wp_website_mail()
+{
 	$plugin = new WPWM\Main();
 	$plugin->run();
-
 }
+
 run_wp_website_mail();

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Fired during plugin deactivation
  *
@@ -23,8 +22,8 @@
 
 namespace WPWM;
 
-class Deactivator {
-
+class Deactivator
+{
 	/**
 	 * Short Description. (use period)
 	 *
@@ -32,8 +31,8 @@ class Deactivator {
 	 *
 	 * @since    1.0.0
 	 */
-	public static function deactivate() {
-		Tools::log( 'Plugin has been DEactivated.' );
+	public static function deactivate()
+	{
+		Tools::log('Plugin has been DEactivated.');
 	}
-
 }
