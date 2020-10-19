@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Define the internationalization functionality
  *
@@ -27,24 +26,19 @@
 
 namespace WPWM;
 
-class I18n {
-
-
+class I18n
+{
 	/**
 	 * Load the plugin text domain for translation.
 	 *
 	 * @since    1.0.0
 	 */
-	public function loadPluginTextdomain() {
-
+	public function loadPluginTextdomain()
+	{
 		load_plugin_textdomain(
 			'wp-website-mail',
 			false,
-			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
+			dirname(dirname(plugin_basename( __FILE__ ))) . '/languages/'
 		);
-
 	}
-
-
-
 }
