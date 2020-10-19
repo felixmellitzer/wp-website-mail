@@ -1,3 +1,4 @@
+<<<<<<< HEAD:README.txt
 === Plugin Name ===
 Contributors: (this should be a list of wordpress.org userid's)
 Donate link: https://tfm.agency
@@ -7,18 +8,21 @@ Tested up to: 3.4
 Stable tag: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+=======
+# WP Website Mail
+>>>>>>> 0c0bcae... add short description:README.md
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Sending E-mails through your website is no problem any more.
 
-== Description ==
+## Bugs
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+If you find an bug or problem, please let us know by creating an issue!
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+## Help to contribute
 
-A few notes about the sections above:
+Contributions to WP Website Mail are welcome!
 
+<<<<<<< HEAD:README.txt
 *   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
 *   "Tags" is a comma separated list of tags that apply to the plugin
 *   "Requires at least" is the lowest version that the plugin will work on
@@ -112,3 +116,10 @@ Markdown uses email style notation for blockquotes and I've been told:
 > Asterisks for *emphasis*. Double it up  for **strong**.
 
 `<?php code(); // goes in backticks ?>`
+=======
+1. Open an Issue on GitHub.
+2. Fork WP Website Mail on GitHub.
+3. Create a new branch.
+4. When committing, reference your issue and provide notes/feedback.
+5. Send us a Pull Request with your bug fixes and/or new features.
+>>>>>>> 0c0bcae... add short description:README.md
