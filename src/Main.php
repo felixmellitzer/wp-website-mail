@@ -160,7 +160,7 @@ class Main {
 	private function defineHooks() {
 		$mail_manager = new MailManager();
 
-		add_action( 'init', '\WPWM\RegistrationManager::get_verification_token_for_verification' );
+		add_action( 'init', '\WPWM\RegistrationManager::getVerificationTokenForVerification' );
 		
 		$this->loader->addAction( 'plugin_loaded', $mail_manager, 'replaceWPMailer' );
 

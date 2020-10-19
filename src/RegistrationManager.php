@@ -112,7 +112,7 @@ class RegistrationManager {
 	}
 
 
-	public static function get_verification_token_for_verification() {
+	public static function getVerificationTokenForVerification() {
 		if ( isset( $_GET['get_wm_verification_token'] ) ) {
 			Tools::log( 'Verification token was requested', ['RegistrationManager'] );
 			echo Options::get_verification_token();
