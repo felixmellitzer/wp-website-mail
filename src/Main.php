@@ -30,8 +30,8 @@
 
 namespace WPWM;
 
-class Main {
-
+class Main
+{
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
@@ -69,8 +69,9 @@ class Main {
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct() {
-		if ( defined( 'WP_WEBSITE_MAIL_VERSION' ) ) {
+	public function __construct()
+	{
+		if (defined('WP_WEBSITE_MAIL_VERSION')) {
 			$this->version = WP_WEBSITE_MAIL_VERSION;
 		} else {
 			$this->version = '1.0.0';
@@ -84,7 +85,6 @@ class Main {
 		$this->defineHooks();
 
 	}
-
 	/**
 	 * Load the required dependencies for this plugin.
 	 *
@@ -101,12 +101,11 @@ class Main {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function loadDependencies() {
-
+	private function loadDependencies()
+	{
 		$this->loader = new Loader();
-
 	}
-
+	
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
@@ -120,7 +119,7 @@ class Main {
 
 		$plugin_i18n = new I18n();
 
-		$this->loader->addAction( 'plugins_loaded', $plugin_i18n, 'loadPluginTextdomain' );
+		$this->loader->addAction('plugins_loaded', $plugin_i18n, 'loadPluginTextdomain');
 
 	}
 
@@ -131,13 +130,12 @@ class Main {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function defineAdminHooks() {
+	private function defineAdminHooks()
+	{
+		$plugin_admin = new Admin\Controller($this->getPluginName(), $this->getVersion());
 
-		$plugin_admin = new Admin\Controller( $this->getPluginName(), $this->getVersion() );
-
-		$this->loader->addAction( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->addAction( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-
+		$this->loader->addAction('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
+		$this->loader->addAction('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 	}
 
 	/**
@@ -147,27 +145,27 @@ class Main {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function definePublicHooks() {
+	private function definePublicHooks()
+	{
+		$plugin_public = new Admin\Controller($this->getPluginName(), $this->getVersion());
 
-		$plugin_public = new Admin\Controller( $this->getPluginName(), $this->getVersion() );
-
-		$this->loader->addAction( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->addAction( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-
+		$this->loader->addAction('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
+		$this->loader->addAction('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 	}
 
 
-	private function defineHooks() {
+	private function defineHooks()
+	{
 		$mail_manager = new MailManager();
 
-		add_action( 'init', '\WPWM\RegistrationManager::getVerificationTokenForVerification' );
+		add_action('init', '\WPWM\RegistrationManager::getVerificationTokenForVerification');
 		
-		$this->loader->addAction( 'plugin_loaded', $mail_manager, 'replaceWPMailer' );
+		$this->loader->addAction('plugin_loaded', $mail_manager, 'replaceWPMailer');
 
 		// Request verification
-		if ( ! Options::hasVerificationStatus() && Options::get_domain_id() ) {
+		if (!Options::hasVerificationStatus() && Options::get_domain_id()) {
 			$registration_manager = new RegistrationManager();
-			$this->loader->addAction( 'init', $registration_manager, 'requestAPIForVerification' );
+			$this->loader->addAction('init', $registration_manager, 'requestAPIForVerification');
 		}
 	}
 
@@ -176,7 +174,8 @@ class Main {
 	 *
 	 * @since    1.0.0
 	 */
-	public function run() {
+	public function run()
+	{
 		$this->loader->run();
 	}
 
@@ -187,7 +186,8 @@ class Main {
 	 * @since     1.0.0
 	 * @return    string    The name of the plugin.
 	 */
-	public function getPluginName() {
+	public function getPluginName()
+	{
 		return $this->plugin_name;
 	}
 
@@ -197,7 +197,8 @@ class Main {
 	 * @since     1.0.0
 	 * @return    Wp_Website_Mail_Loader    Orchestrates the hooks of the plugin.
 	 */
-	public function getLoader() {
+	public function getLoader()
+	{
 		return $this->loader;
 	}
 
@@ -207,7 +208,8 @@ class Main {
 	 * @since     1.0.0
 	 * @return    string    The version number of the plugin.
 	 */
-	public function getVersion() {
+	public function getVersion()
+	{
 		return $this->version;
 	}
 
