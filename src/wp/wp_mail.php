@@ -1,8 +1,6 @@
 <?php
 
 function wp_mail( $to, $subject, $message, $headers = '', $attachments = array() ) {
-	WPWM\Tools::log('Our wp_mail was called!');
-
 	$atts = apply_filters( 'wp_mail', compact( 'to', 'subject', 'message', 'headers', 'attachments' ) );
 
 	if ( isset( $atts['to'] ) ) {

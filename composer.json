@@ -2,7 +2,8 @@
     "name": "tfm-agency/wp-website-mail",
     "type": "wordpress-plugin",
     "require": {
-        "monolog/monolog": "^2.1"
+        "monolog/monolog": "^2.1",
+        "guzzlehttp/guzzle": "7.0"
     },
     "autoload": {
         "psr-4": {
