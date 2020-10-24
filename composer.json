@@ -3,7 +3,7 @@
     "type": "wordpress-plugin",
     "require": {
         "monolog/monolog": "^2.1",
-        "guzzlehttp/guzzle": "7.0"
+        "guzzlehttp/guzzle": "^7.2"
     },
     "autoload": {
         "psr-4": {

@@ -2,7 +2,7 @@
 
 function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
 {
-	$atts = apply_filters('wp_mail', compact( 'to', 'subject', 'message', 'headers', 'attachments'));
+	$atts = apply_filters('wp_mail', compact('to', 'subject', 'message', 'headers', 'attachments'));
 
 	if (isset($atts['to'])) {
 		$to = $atts['to'];
@@ -68,26 +68,6 @@ function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
 				$content = trim($content);
 
 				switch (strtolower($name)) {
-					// Mainly for legacy -- process a "From:" header if it's there.
-					case 'from':
-						$bracket_pos = strpos($content, '<');
-						if (false !== $bracket_pos) {
-							// Text before the bracketed email is the "From" name.
-							if ($bracket_pos > 0) {
-								$from_name = substr($content, 0, $bracket_pos - 1);
-								$from_name = str_replace('"', '', $from_name);
-								$from_name = trim($from_name);
-							}
-
-							$from_email = substr($content, $bracket_pos + 1);
-							$from_email = str_replace('>', '', $from_email);
-							$from_email = trim($from_email);
-
-							// Avoid setting an empty $from_email.
-						} elseif ('' !== trim($content)) {
-							$from_email = trim($content);
-						}
-						break;
 					case 'content-type':
 						if (strpos($content, ';') !== false) {
 							list($type, $charset_content) = explode(';', $content);
@@ -100,7 +80,7 @@ function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
 							}
 
 							// Avoid setting an empty $content_type.
-						} elseif ('' !== trim( $content)) {
+						} elseif ('' !== trim($content)) {
 							$content_type = trim($content);
 						}
 						break;
@@ -139,22 +119,36 @@ function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
 	$content_type = apply_filters('wp_mail_content_type', $content_type);
 
 
+	$html_message = null;
 	// Set whether it's plaintext, depending on $content_type.
 	if ('text/html' === $content_type) {
-		// TODO: Send html email
+		$html_message = $message;
+		$message = null;
 	}
 
-	// If we don't have a charset from the input headers.
-	if (!isset($charset)) {
-		$charset = get_bloginfo('charset');
-	}
 
+	$uploads = null;
 	if (!empty($attachments)) {
+		$uploads = array();
 		foreach ($attachments as $attachment) {
-			// TODO: Attachments
+			$uploads[basename($attachment)] = $attachment;
 		}
 	}
 
-	$api = new WPWM\API(WPWM\Options::get_session_id(), WPWM\Options::get_session_key());
-	$api->sendEmail(WPWM\Options::get_domain_id(), implode(',', $to), implode(',', $cc), implode(',', $bcc), $subject, $message);
+	$api = new WPWM\API(
+		WPWM\Options::get_session_id(),
+		WPWM\Options::get_session_key()
+	);
+	$result = $api->sendEmail(
+		WPWM\Options::get_domain_id(),
+		implode(',', $to),
+		implode(',', $cc),
+		implode(',', $bcc),
+		$subject,
+		$message,
+		$html_message,
+		$uploads
+	);
+
+	return $api->wasRequestSuccessful($result[1]);
 }

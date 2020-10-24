@@ -54,8 +54,12 @@ class API
 		return $this->post($path);
 	}
 
-	public function sendEmail($domain_id, $to, $cc = '', $bcc = '', $subject, $message_text, $message_html = '', $attachments = null)
+	public function sendEmail($domain_id, $to, $cc = '', $bcc = '', $subject, $message_text = null, $message_html = null, $attachments = null)
 	{
+		if (!isset($message_text) && !isset($message_html)) {
+			throw new Errors\APIError('Either TEXT or HTML message have to be set');
+		}
+
 		$path = 'emails';
 
 		$body = array(
@@ -70,21 +74,17 @@ class API
 			)
 		);
 
-		$headers = array();
-		$multipart = null;
-
 		if (isset($attachments)) {
-			$multipart = array();
-
-			foreach ($attachments as $attachment) {
-				array_push($multipart, [
-					'name' => end(explode('/', $attachment)),
-					'contents' => fopen($attachment)
-				]);
+			$body['email']['attachments'] = array();
+			// Add uploads to $body
+			foreach ($attachments as $k => $v) {
+				$body['email']['attachments'][$k] = fopen($v, 'r');
 			}
 		}
 
-		return $this->post($path, $body, $headers, $multipart);
+		$headers = array();
+
+		return $this->post($path, $body, $headers, isset($attachments));
 	}
 
 	protected function get($path, $params = array(), $headers = array())
@@ -113,21 +113,20 @@ class API
 		);
 	}
 
-	protected function post($path, $body = array(), $headers = array(), $uploads = null)
+	protected function post($path, $body = array(), $headers = array(), $is_multipart = false)
 	{
 		$this->log('POST request initiated', array($path));
 
 		$headers['Authorization'] = $this->getAPISessionHeader();
 
 		$request_options = [
-			'form_params' => $body,
 			'headers' => $headers
 		];
 
-		if (isset($multipart)) {
-			$request_options['multipart'] = $multipart;
+		if ($is_multipart) {
+			$request_options['multipart'] = $this->convertFormParamsToMultipart($body);
 		} else {
-			
+			$request_options['form_params'] = $body;
 		}
 
 		$response = $this->http_client->request('POST', $path, $request_options);
@@ -136,7 +135,7 @@ class API
 		$response_status_code = $response->getStatusCode();
 
 		if (isset($response_body)) {
-			$response_body = json_decode( $response_body );
+			$response_body = json_decode($response_body);
 		}
 
 		$this->log('POST request ended', array($path, $response_status_code));
@@ -168,6 +167,11 @@ class API
 	}
 
 
+	public function wasRequestSuccessful($status_code)
+	{
+		return 200 <= $status_code && $status_code <= 299;
+	}
+
 	private function getAPISessionHeader()
 	{
 		if (!isset($this->session_id) || !isset($this->session_key)) {
@@ -175,6 +179,24 @@ class API
 		}
 
 		return 'Bearer ' . $this->session_id . ':' . $this->session_key;
+	}
+
+	private function convertFormParamsToMultipart($form_params)
+	{
+		$multipart = array();
+		$vars = explode('&', http_build_query($form_params));
+
+		foreach ($vars as $var) {
+			list($nameRaw, $contentsRaw) = explode('=', $var);
+		    $name = urldecode($nameRaw);
+		    $contents = urldecode($contentsRaw);
+
+			$multipart[] = [
+				'name' => $name,
+				'contents' => $contents
+			];
+		}
+		return $multipart;
 	}
 
 	protected function log($message, $context = array())
