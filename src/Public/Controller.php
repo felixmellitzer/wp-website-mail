@@ -73,7 +73,7 @@ class Controller
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_style($this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-website-mail-public.css', array(), $this->version, 'all');
+		wp_enqueue_style($this->plugin_name, WP_WEBSITE_MAIL_BASEPATH . 'assets/public/css/wp-website-mail-public.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -95,6 +95,6 @@ class Controller
 		 * class.
 		 */
 
-		wp_enqueue_script($this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-website-mail-public.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name, WP_WEBSITE_MAIL_BASEPATH . 'assets/public/js/wp-website-mail-public.js', array('jquery'), $this->version, false);
 	}
 }

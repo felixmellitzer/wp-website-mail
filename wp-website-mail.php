@@ -29,20 +29,21 @@ if (!defined('WPINC')) {
 	die;
 }
 
-require __DIR__ . '/vendor/autoload.php';
-
-
-/**
- * Setup logging functionality.
- */
-WPWM\Tools::setupGlobalLogger();
-
 /**
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
 define('WP_WEBSITE_MAIL_VERSION', '1.0.0');
+define('WP_WEBSITE_MAIL_BASEPATH', plugin_dir_path(__FILE__));
+
+require WP_WEBSITE_MAIL_BASEPATH . '/vendor/autoload.php';
+
+
+/**
+ * Setup logging functionality.
+ */
+WPWM\Tools::setupGlobalLogger();
 
 
 register_activation_hook(__FILE__, 'WPWM\Activator::activate');
