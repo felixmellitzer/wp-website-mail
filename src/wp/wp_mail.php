@@ -126,15 +126,6 @@ function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
 		$message = null;
 	}
 
-
-	$uploads = null;
-	if (!empty($attachments)) {
-		$uploads = array();
-		foreach ($attachments as $attachment) {
-			$uploads[basename($attachment)] = $attachment;
-		}
-	}
-
 	$api = new WPWM\API(
 		WPWM\Options::get_session_id(),
 		WPWM\Options::get_session_key()
@@ -147,7 +138,7 @@ function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
 		$subject,
 		$message,
 		$html_message,
-		$uploads
+		$attachments
 	);
 
 	return $api->wasRequestSuccessful($result[1]);

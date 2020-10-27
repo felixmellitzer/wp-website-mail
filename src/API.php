@@ -63,28 +63,29 @@ class API
 		$path = 'emails';
 
 		$body = array(
-			'email' => array(
-				'website_domain_id' => $domain_id,
-				'to' => $to,
-				'cc' => $cc,
-				'bcc' => $bcc,
-				'subject' => $subject,
-				'message_text' => $message_text,
-				'message_html' => $message_html,
-			)
+			'email[website_domain_id]' => $domain_id,
+			'email[to]' => $to,
+			'email[cc]' => $cc,
+			'email[bcc]' => $bcc,
+			'email[subject]' => $subject,
+			'email[message_text]' => $message_text,
+			'email[message_html]' => $message_html,
 		);
 
-		if (isset($attachments)) {
-			$body['email']['attachments'] = array();
-			// Add uploads to $body
-			foreach ($attachments as $k => $v) {
-				$body['email']['attachments'][$k] = fopen($v, 'r');
+		$is_multipart = is_array($attachments) && !empty($attachments);
+
+		if ($is_multipart) {
+			foreach ($attachments as $attachment) {
+				$body['email[attachments][]'] = [
+					'contents' => fopen($attachment, 'r'),
+					'filename' => basename($attachment)
+				];	
 			}
 		}
 
 		$headers = array();
 
-		return $this->post($path, $body, $headers, isset($attachments));
+		return $this->post($path, $body, $headers, $is_multipart);
 	}
 
 	protected function get($path, $params = array(), $headers = array())
@@ -124,12 +125,16 @@ class API
 		];
 
 		if ($is_multipart) {
-			$request_options['multipart'] = $this->convertFormParamsToMultipart($body);
+			$request_options['multipart'] = $this->convertBodyToMultipartArray($body);
 		} else {
 			$request_options['form_params'] = $body;
 		}
 
-		$response = $this->http_client->request('POST', $path, $request_options);
+		$response = $this->http_client->request(
+			'POST',
+			$path,
+			$request_options
+		);
 
 		$response_body = $response->getBody();
 		$response_status_code = $response->getStatusCode();
@@ -181,20 +186,21 @@ class API
 		return 'Bearer ' . $this->session_id . ':' . $this->session_key;
 	}
 
-	private function convertFormParamsToMultipart($form_params)
+	private function convertBodyToMultipartArray($body)
 	{
 		$multipart = array();
-		$vars = explode('&', http_build_query($form_params));
-
-		foreach ($vars as $var) {
-			list($nameRaw, $contentsRaw) = explode('=', $var);
-		    $name = urldecode($nameRaw);
-		    $contents = urldecode($contentsRaw);
-
-			$multipart[] = [
-				'name' => $name,
-				'contents' => $contents
-			];
+		foreach ($body as $name => $contents) {
+			if (!is_array($contents)) {
+				$multipart[] = [
+					'name' => $name,
+					'contents' => $contents
+				];
+			} else {
+				$multipart[] = array_merge(
+					['name' => $name],
+					$contents
+				);
+			}
 		}
 		return $multipart;
 	}
