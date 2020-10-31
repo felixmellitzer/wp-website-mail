@@ -54,7 +54,7 @@ class API
 		return $this->post($path);
 	}
 
-	public function sendEmail($domain_id, $to, $cc = '', $bcc = '', $subject, $message_text = null, $message_html = null, $attachments = null)
+	public function sendEmail($domain_id, $from_name, $from_email, $to, $cc = '', $bcc = '', $subject, $message_text = null, $message_html = null, $attachments = null, $headers = null)
 	{
 		if (!isset($message_text) && !isset($message_html)) {
 			throw new Errors\APIError('Either TEXT or HTML message have to be set');
@@ -64,6 +64,8 @@ class API
 
 		$body = array(
 			'email[website_domain_id]' => $domain_id,
+			'email[from_name]' => $from_name,
+			'email[from_email]' => $from_email,
 			'email[to]' => $to,
 			'email[cc]' => $cc,
 			'email[bcc]' => $bcc,
@@ -71,6 +73,10 @@ class API
 			'email[message_text]' => $message_text,
 			'email[message_html]' => $message_html,
 		);
+
+		foreach ($headers as $key => $value) {
+			$body['email[headers][' . $key . ']'] = $value;
+		}
 
 		$is_multipart = is_array($attachments) && !empty($attachments);
 
