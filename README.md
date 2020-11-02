@@ -1,3 +1,5 @@
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/TFM-Agency/wp-website-mail)
+
 # WP Website Mail
 
 Sending E-mails through your WordPress Website is no problem any more.
