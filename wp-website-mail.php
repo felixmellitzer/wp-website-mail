@@ -1,11 +1,11 @@
 <?php
+
 /**
  * The plugin bootstrap file
  *
  * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also includes all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
+ * admin area and set up a logging functionality. This file also registers the 
+ * activation and deactivation functions, and defines a function that starts the plugin.
  *
  * @link              https://tfm.agency
  * @since             1.0.0
@@ -14,7 +14,7 @@
  * @wordpress-plugin
  * Plugin Name:       website-mail.com
  * Plugin URI:        https://website-mail.com
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       Fully automated email sending service for your WordPress website.
  * Version:           1.0.0
  * Author:            TFM Agency GmbH
  * Author URI:        https://tfm.agency
@@ -26,7 +26,7 @@
 
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
-	die;
+    die;
 }
 
 /**
@@ -37,15 +37,13 @@ if (!defined('WPINC')) {
 define('WP_WEBSITE_MAIL_VERSION', '1.0.0');
 define('WP_WEBSITE_MAIL_BASEPATH', plugin_dir_path(__FILE__));
 
+// Includes the autoload.php for all Composer packages.
 require WP_WEBSITE_MAIL_BASEPATH . '/vendor/autoload.php';
 
-
-/**
- * Setup logging functionality.
- */
+// Setup logging functionality.
 WPWM\Tools::setupGlobalLogger();
 
-
+// Activation and deactivation hook.
 register_activation_hook(__FILE__, 'WPWM\Activator::activate');
 register_deactivation_hook(__FILE__, 'WPWM\Deactivator::deactivate');
 
@@ -60,8 +58,8 @@ register_deactivation_hook(__FILE__, 'WPWM\Deactivator::deactivate');
  */
 function run_wp_website_mail()
 {
-	$plugin = new WPWM\Main();
-	$plugin->run();
+    $plugin = new WPWM\Main();
+    $plugin->run();
 }
 
 run_wp_website_mail();
